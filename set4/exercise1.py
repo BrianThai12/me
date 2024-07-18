@@ -171,6 +171,18 @@ def diarist():
 
     NOTE: this function doesn't return anything. It has the _side effect_ of modifying the file system
     """
+    f = open(LOCAL + "\Trispokedovetiles(laser).gcode", "r")
+    
+    off_count = 0
+    
+    for x in f:
+        if "M10 P1" in x:
+            off_count += 1
+    g = open(LOCAL + "\lasers.pew", "w")
+    g.write(str(off_count))   
+    g.close()
+
+    print(off_count)
     pass
 
 

@@ -93,7 +93,10 @@ def n_counter(search_for_this, input_list=[1, 4, 1, 5, 1, 1]) -> int:
     """Count the number of times search_for_this shows up in the input_list.
     Return an integer.
     """
-    count = None
+    count = 0
+    for x in input_list:
+        if x == search_for_this:
+            count += 1
 
     return count
 
@@ -118,6 +121,15 @@ def fizz_buzz() -> list:
     """
     fizz_buzz_list = []
     # your code here
+    for i in range(1, 101):
+        if i % 3 == 0 and i % 5 == 0:
+            fizz_buzz_list.append("FizzBuzz")
+        elif i % 3 == 0:
+            fizz_buzz_list.append("Fizz")
+        elif i % 5 == 0:
+            fizz_buzz_list.append("Buzz")
+        else:
+            fizz_buzz_list.append(i)
 
     return fizz_buzz_list
 
@@ -133,8 +145,11 @@ def set_it_on_fire(input_string="very naughty boy") -> str:
     TIP: consider using the 'join' method in Python.
     TIP: make sure that you have a 🔥 on both ends of the string.
     """
+    input_string = input_string.upper()
+    interleaved = "🔥".join(input_string)
+    result = f"🔥{interleaved}🔥"
 
-    return None
+    return result
 
 
 def the_chain_gang_5(the_value) -> bool:
@@ -147,8 +162,8 @@ def the_chain_gang_5(the_value) -> bool:
     TIP: you've already written a function that returns True if the value is 5
     TIP: you've already written a function that subtracts 5
     """
-
-    return None
+    result = take_five(the_value)
+    return is_it_5(result)
 
 
 def pet_filter(letter="a") -> list:
@@ -165,7 +180,7 @@ def pet_filter(letter="a") -> list:
         "fancy rat and lab rat", "mink", "red fox", "hedgehog", "guppy"
     ]
     # fmt: on
-    filtered = []
+    filtered = [pet for pet in pets if letter in pet]
 
     return filtered
 

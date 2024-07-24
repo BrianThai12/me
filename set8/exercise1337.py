@@ -197,9 +197,15 @@ def best_letter_for_pets() -> str:
 
     the_alphabet = string.ascii_lowercase
     most_popular_letter = ""
-    count = 0
-    filtered_pets = pet_filter(letter)
+    max_count = 0
 
+    for letter in the_alphabet:
+        filtered_pets = pet_filter(letter)
+
+        count = len(filtered_pets)
+        if count > max_count:
+            max_count = count
+            most_popular_letter = letter
     return most_popular_letter
 
 
@@ -228,9 +234,16 @@ def make_filler_text_dictionary() -> dict:
     TIP: you'll need the requests library
     """
 
-    url = "https://us-central1-waldenpondpress.cloudfunctions.net/give_me_a_word?wordlength="
+    url = f"https://us-central1-waldenpondpress.cloudfunctions.net/give_me_a_word?wordlength="
     wd = {}
-
+    for length in range(3, 8):
+        words = []
+        while len(words) < 4:
+            response = requests.get(url + str(length))
+            word = response.text.strip()
+            if word:
+                words.append(word)
+        wd[length] = words
     return wd
 
 
@@ -248,6 +261,13 @@ def random_filler_text(number_of_words=200) -> str:
     my_dict = make_filler_text_dictionary()
 
     words = []
+    lengths = list(my_dict.keys())
+    for _ in range(number_of_words):
+        index = random.randint(0, len(lengths) - 1)
+        length = lengths[index]
+        word = random.choice(my_dict[length])
+        if word:
+            words.append(word)
 
     return " ".join(words)
 
@@ -270,7 +290,26 @@ def fast_filler(number_of_words=200) -> str:
 
     fname = "dict_cache.json"
 
-    return None
+    if os.path.exists(fname):
+        with open(fname, "r") as file:
+            wd = json.load(file)
+            wd = {int(x): y for x, y in wd.items()}
+    else:
+        wd = make_filler_text_dictionary()
+        with open(fname, "w") as file:
+            json.dump(wd, file)
+
+    words = []
+    lengths = list(wd.keys())
+
+    while len(words) < number_of_words:
+        length = random.choice(lengths)
+        word = random.choice(wd[length])
+        words.append(word)
+
+    filler_text = " ".join(words).capitalize() + "."
+
+    return filler_text
 
 
 if __name__ == "__main__":
